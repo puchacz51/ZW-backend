@@ -22,11 +22,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectService {    private final ProjectRepository projectRepository;
+public class ProjectService {
+    private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final UserService userService;
     private final ProjectUserRepository projectUserRepository;
     private final ProjectCommentRepository projectCommentRepository;
+    private final AuditLogService auditLogService;
 
     @Transactional
     public ProjectResponse createProject(ProjectRequest projectRequest, String userEmail) {
@@ -43,6 +45,11 @@ public class ProjectService {    private final ProjectRepository projectReposito
                 .build();
 
         Project savedProject = projectRepository.save(project);
+        
+        // Logowanie audytu
+        auditLogService.logActionAsync(userEmail, AuditLogService.ACTION_CREATE, 
+                AuditLogService.ENTITY_PROJECT, savedProject.getId());
+        
         return convertToResponse(savedProject);
     }
 
@@ -89,6 +96,11 @@ public class ProjectService {    private final ProjectRepository projectReposito
         }
 
         Project updatedProject = projectRepository.save(project);
+        
+        // Logowanie audytu
+        auditLogService.logActionAsync(userEmail, AuditLogService.ACTION_UPDATE, 
+                AuditLogService.ENTITY_PROJECT, projectId);
+        
         return convertToResponse(updatedProject);
     }
 
@@ -102,9 +114,16 @@ public class ProjectService {    private final ProjectRepository projectReposito
         if (!project.getCreatedBy().getId().equals(currentUser.getId())) {
             throw new UnauthorizedOperationException("User not authorized to delete this project");
         }
-        // Consider related entities (tasks, files) before deletion if cascading is not set
+        
+        // Logowanie audytu przed usunięciem
+        auditLogService.logAction(userEmail, AuditLogService.ACTION_DELETE, 
+                AuditLogService.ENTITY_PROJECT, projectId);
+        
+        // Kaskadowe usuwanie jest ustawione w encji Project
         projectRepository.delete(project);
-    }    private ProjectResponse convertToResponse(Project project) {
+    }
+
+    private ProjectResponse convertToResponse(Project project) {
         UserSummaryResponse userSummary = userService.convertToUserSummaryResponse(project.getCreatedBy());
         
         // Get assigned users

@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:16'
     environment:
       - 'POSTGRES_DB=${DB_NAME:-mydatabase}'
       - 'POSTGRES_PASSWORD=${DB_PASSWORD:-secret}'
@@ -8,7 +8,7 @@ services:
       - 'POSTGRES_HOST_AUTH_METHOD=md5'
       - 'POSTGRES_INITDB_ARGS=--auth-host=md5'
     ports:
-      - '${DB_PORT:-5432}:5432'
+      - '${DB_PORT:-5433}:5432'
     env_file:
       - ./.env
     volumes:

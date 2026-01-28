@@ -1,0 +1,1901 @@
+\documentclass[12pt,a4paper]{report}
+
+% ============================================================================
+% PAKIETY
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning, fit, calc}
+
+% ============================================================================
+% KONFIGURACJA
+% ============================================================================
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% Kolory dla kodu
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{javared}{rgb}{0.6,0,0}
+\definecolor{javablue}{rgb}{0,0,0.6}
+
+% Styl dla kodu Java
+\lstdefinestyle{javastyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{javablue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{javared},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single,
+    language=Java
+}
+
+% Styl dla SQL
+\lstdefinestyle{sqlstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{javablue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{javared},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single,
+    language=SQL,
+    morekeywords={SERIAL, BIGSERIAL, VARCHAR, BOOLEAN, TIMESTAMP, REFERENCES, CASCADE, RESTRICT}
+}
+
+% Styl dla properties
+\lstdefinestyle{propstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single
+}
+
+\lstset{style=javastyle}
+
+% Nagłówki i stopki
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{System Zarządzania Projektami}
+\fancyfoot[C]{\thepage}
+
+% Hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Dokumentacja Systemu Zarządzania Projektami},
+    pdfauthor={Autor}
+}
+
+% ============================================================================
+% STRONA TYTUŁOWA
+% ============================================================================
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\scshape\LARGE Politechnika Bydgoska \par}
+    \vspace{0.5cm}
+    {\scshape\Large Wydział Informatyki \par}
+    \vspace{2cm}
+    
+    {\huge\bfseries System Zarządzania Projektami\par}
+    \vspace{0.5cm}
+    {\Large Aplikacja webowa REST API\par}
+    \vspace{2cm}
+    
+    {\Large\bfseries Dokumentacja Projektu\par}
+    \vspace{1cm}
+    
+    {\large Przedmiot: Bazy Danych\par}
+    \vspace{2cm}
+    
+    \begin{tabular}{rl}
+        \textbf{Autor:} & [Imię i Nazwisko] \\
+        \textbf{Nr albumu:} & [Numer albumu] \\
+        \textbf{Kierunek:} & Informatyka \\
+        \textbf{Semestr:} & [Numer semestru] \\
+    \end{tabular}
+    
+    \vfill
+    
+    {\large Bydgoszcz, \the\year\par}
+\end{titlepage}
+
+% ============================================================================
+% SPIS TREŚCI
+% ============================================================================
+\tableofcontents
+\newpage
+
+% ============================================================================
+% ROZDZIAŁ 1: OPIS SŁOWNY REALIZOWANEGO ZADANIA
+% ============================================================================
+\chapter{Opis słowny realizowanego zadania}
+
+\section{Cel projektu}
+
+Celem projektu jest stworzenie kompleksowego systemu zarządzania projektami (Project Management System), który umożliwia zespołom efektywną organizację pracy, śledzenie postępów oraz współpracę w czasie rzeczywistym.
+
+System został zaimplementowany jako aplikacja typu REST API z wykorzystaniem nowoczesnych technologii backendowych, zapewniając:
+\begin{itemize}
+    \item Skalowalność i wydajność
+    \item Bezpieczeństwo danych użytkowników
+    \item Łatwą integrację z aplikacjami frontendowymi
+    \item Pełną dokumentację API (OpenAPI/Swagger)
+\end{itemize}
+
+\section{Zakres funkcjonalności}
+
+System realizuje następujące funkcjonalności:
+
+\subsection{Moduł autentykacji i autoryzacji}
+\begin{itemize}
+    \item Rejestracja nowych użytkowników z walidacją danych
+    \item Logowanie z wykorzystaniem tokenów JWT (JSON Web Token)
+    \item Odświeżanie tokenów dostępu
+    \item Resetowanie hasła przez email
+    \item Role użytkowników: USER, ADMIN
+\end{itemize}
+
+\subsection{Moduł zarządzania projektami}
+\begin{itemize}
+    \item Tworzenie, edycja i usuwanie projektów
+    \item Przypisywanie użytkowników do projektów z rolami (OWNER, MEMBER, VIEWER)
+    \item Zarządzanie statusami projektów (NOT\_STARTED, IN\_PROGRESS, ON\_HOLD, COMPLETED, CANCELLED)
+    \item Określanie dat rozpoczęcia i zakończenia projektu
+\end{itemize}
+
+\subsection{Moduł zarządzania zadaniami}
+\begin{itemize}
+    \item CRUD operacje na zadaniach w ramach projektów
+    \item Przypisywanie zadań do użytkowników
+    \item Statusy zadań: TODO, IN\_PROGRESS, REVIEW, DONE
+    \item Terminy realizacji zadań
+\end{itemize}
+
+\subsection{Moduł komentarzy}
+\begin{itemize}
+    \item Komentarze do projektów
+    \item Komentarze do zadań
+    \item Edycja i usuwanie własnych komentarzy
+\end{itemize}
+
+\subsection{Moduł plików}
+\begin{itemize}
+    \item Upload plików do projektów
+    \item Pobieranie plików
+    \item Walidacja typów i rozmiarów plików
+    \item Zarządzanie avatarami użytkowników
+\end{itemize}
+
+\subsection{Moduł powiadomień}
+\begin{itemize}
+    \item Automatyczne powiadomienia o przypisaniu do projektu/zadania
+    \item Powiadomienia o zmianach statusów
+    \item Oznaczanie powiadomień jako przeczytane
+\end{itemize}
+
+\subsection{Moduł audytu}
+\begin{itemize}
+    \item Automatyczne logowanie wszystkich operacji
+    \item Historia zmian w systemie
+    \item Statystyki aktywności użytkowników
+\end{itemize}
+
+\subsection{Moduł komunikacji}
+\begin{itemize}
+    \item Chat w czasie rzeczywistym (WebSocket)
+    \item Historia wiadomości
+\end{itemize}
+
+\section{Opis problemu biznesowego}
+
+W dzisiejszych czasach efektywne zarządzanie projektami stanowi kluczowy element sukcesu organizacji. Tradycyjne metody komunikacji i śledzenia postępów (email, arkusze kalkulacyjne) są niewystarczające dla zespołów rozproszonych geograficznie.
+
+System rozwiązuje następujące problemy:
+\begin{enumerate}
+    \item \textbf{Brak centralnego miejsca informacji} -- wszystkie dane projektowe w jednym systemie
+    \item \textbf{Trudności w śledzeniu postępów} -- statusy zadań i projektów w czasie rzeczywistym
+    \item \textbf{Problemy z komunikacją} -- wbudowany chat i komentarze
+    \item \textbf{Brak historii zmian} -- pełny audyt wszystkich operacji
+    \item \textbf{Zarządzanie dokumentami} -- centralne repozytorium plików projektowych
+\end{enumerate}
+
+\section{Stos technologiczny}
+
+\begin{table}[H]
+\centering
+\caption{Wykorzystane technologie}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Warstwa} & \textbf{Technologia} & \textbf{Wersja} \\
+\hline
+Backend & Spring Boot & 3.4.4 \\
+Język programowania & Java & 23 \\
+Baza danych & PostgreSQL & 15+ \\
+ORM & Spring Data JPA / Hibernate & 6.x \\
+Autentykacja & JWT (jjwt) & 0.11.5 \\
+Dokumentacja API & OpenAPI / Swagger & 2.5.0 \\
+WebSocket & Spring WebSocket & -- \\
+Email & Spring Mail + Thymeleaf & -- \\
+Build tool & Gradle & 8.13 \\
+Testy & JUnit 5 + TestContainers & -- \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% ROZDZIAŁ 2: OPIS FORMALNY
+% ============================================================================
+\chapter{Opis formalny systemu}
+
+\section{Diagram przypadków użycia}
+
+Poniższy diagram przedstawia główne przypadki użycia systemu z podziałem na aktorów.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    actor/.style={circle, draw, minimum size=1cm},
+    usecase/.style={ellipse, draw, minimum width=2.5cm, minimum height=1cm, text width=2.3cm, align=center, font=\scriptsize},
+    system/.style={rectangle, draw, dashed, minimum width=10cm, minimum height=12cm}
+]
+
+% System boundary
+\node[system, label=above:{\textbf{System Zarządzania Projektami}}] (sys) at (5,0) {};
+
+% Actors
+\node[actor, label=below:{Gość}] (guest) at (-1,2) {G};
+\node[actor, label=below:{Użytkownik}] (user) at (-1,-2) {U};
+\node[actor, label=below:{Admin}] (admin) at (11,-2) {A};
+
+% Use cases - Authentication
+\node[usecase] (uc1) at (3,4) {Rejestracja};
+\node[usecase] (uc2) at (3,2.5) {Logowanie};
+\node[usecase] (uc3) at (3,1) {Reset hasła};
+
+% Use cases - Projects
+\node[usecase] (uc4) at (3,-0.5) {Zarządzanie projektami};
+\node[usecase] (uc5) at (3,-2) {Zarządzanie zadaniami};
+
+% Use cases - Other
+\node[usecase] (uc6) at (7,4) {Komentarze};
+\node[usecase] (uc7) at (7,2.5) {Pliki};
+\node[usecase] (uc8) at (7,1) {Powiadomienia};
+\node[usecase] (uc9) at (7,-0.5) {Chat};
+\node[usecase] (uc10) at (7,-2) {Audyt};
+
+% Connections - Guest
+\draw (guest) -- (uc1);
+\draw (guest) -- (uc2);
+\draw (guest) -- (uc3);
+
+% Connections - User
+\draw (user) -- (uc4);
+\draw (user) -- (uc5);
+\draw (user) -- (uc6);
+\draw (user) -- (uc7);
+\draw (user) -- (uc8);
+\draw (user) -- (uc9);
+
+% Connections - Admin
+\draw (admin) -- (uc10);
+\draw (admin) -- (uc4);
+
+% Inheritance
+\draw[dashed, ->] (user) -- (guest);
+\draw[dashed, ->] (admin) -- (user);
+
+\end{tikzpicture}
+\caption{Diagram przypadków użycia}
+\end{figure}
+
+\section{Diagram ERD (Entity-Relationship Diagram)}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    entity/.style={rectangle, draw, minimum width=3cm, minimum height=0.8cm, fill=blue!10},
+    attribute/.style={ellipse, draw, minimum width=1.5cm, fill=yellow!20, font=\tiny},
+    relation/.style={diamond, draw, minimum width=1.5cm, fill=green!20, font=\scriptsize}
+]
+
+% Entities
+\node[entity] (users) at (0,0) {\textbf{USERS}};
+\node[entity] (projects) at (6,0) {\textbf{PROJECTS}};
+\node[entity] (tasks) at (6,-4) {\textbf{TASKS}};
+\node[entity] (comments) at (0,-4) {\textbf{COMMENTS}};
+\node[entity] (files) at (10,-2) {\textbf{FILES}};
+\node[entity] (notifications) at (-4,-2) {\textbf{NOTIFICATIONS}};
+\node[entity] (audit) at (3,-6) {\textbf{AUDIT\_LOGS}};
+
+% Relations
+\node[relation] (rel1) at (3,0) {tworzy};
+\node[relation] (rel2) at (6,-2) {zawiera};
+\node[relation] (rel3) at (3,-4) {ma};
+\node[relation] (rel4) at (8,-0.5) {posiada};
+\node[relation] (rel5) at (-2,-1) {otrzymuje};
+
+% Connections
+\draw (users) -- (rel1) node[midway,above] {1};
+\draw (rel1) -- (projects) node[midway,above] {N};
+\draw (projects) -- (rel2) node[midway,right] {1};
+\draw (rel2) -- (tasks) node[midway,right] {N};
+\draw (tasks) -- (rel3) node[midway,above] {1};
+\draw (rel3) -- (comments) node[midway,above] {N};
+\draw (projects) -- (rel4) node[midway,above] {1};
+\draw (rel4) -- (files) node[midway,above] {N};
+\draw (users) -- (rel5) node[midway,left] {1};
+\draw (rel5) -- (notifications) node[midway,left] {N};
+
+% User-Audit
+\draw (users) -- (audit) node[midway,left] {1:N};
+
+\end{tikzpicture}
+\caption{Uproszczony diagram ERD}
+\end{figure}
+
+\section{Definicje tabel i typy danych}
+
+\subsection{Tabela USERS}
+
+\begin{table}[H]
+\centering
+\caption{Struktura tabeli USERS}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Kolumna} & \textbf{Typ} & \textbf{Null} & \textbf{Klucz} & \textbf{Opis} \\
+\hline
+id & BIGSERIAL & NOT NULL & PK & Identyfikator \\
+first\_name & VARCHAR(50) & NOT NULL & -- & Imię \\
+last\_name & VARCHAR(50) & NOT NULL & -- & Nazwisko \\
+email & VARCHAR(100) & NOT NULL & UQ & Email (unikalny) \\
+password & VARCHAR(255) & NOT NULL & -- & Hash hasła (BCrypt) \\
+role & VARCHAR(20) & NOT NULL & -- & Rola (USER/ADMIN) \\
+avatar\_file\_name & VARCHAR(255) & NULL & -- & Nazwa pliku avatara \\
+avatar\_content\_type & VARCHAR(50) & NULL & -- & Typ MIME avatara \\
+created\_at & TIMESTAMP & NOT NULL & -- & Data utworzenia \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Tabela PROJECTS}
+
+\begin{table}[H]
+\centering
+\caption{Struktura tabeli PROJECTS}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Kolumna} & \textbf{Typ} & \textbf{Null} & \textbf{Klucz} & \textbf{Opis} \\
+\hline
+id & BIGSERIAL & NOT NULL & PK & Identyfikator \\
+name & VARCHAR(255) & NOT NULL & -- & Nazwa projektu \\
+description & VARCHAR(1000) & NULL & -- & Opis projektu \\
+start\_date & DATE & NULL & -- & Data rozpoczęcia \\
+end\_date & DATE & NULL & -- & Data zakończenia \\
+status & VARCHAR(20) & NOT NULL & -- & Status projektu \\
+created\_by & BIGINT & NOT NULL & FK & ID twórcy \\
+created\_at & DATE & NOT NULL & -- & Data utworzenia \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Tabela TASKS}
+
+\begin{table}[H]
+\centering
+\caption{Struktura tabeli TASKS}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Kolumna} & \textbf{Typ} & \textbf{Null} & \textbf{Klucz} & \textbf{Opis} \\
+\hline
+id & BIGSERIAL & NOT NULL & PK & Identyfikator \\
+name & VARCHAR(100) & NOT NULL & -- & Nazwa zadania \\
+description & VARCHAR(500) & NULL & -- & Opis zadania \\
+status & VARCHAR(20) & NOT NULL & -- & Status zadania \\
+due\_date & DATE & NULL & -- & Termin realizacji \\
+project\_id & BIGINT & NOT NULL & FK & ID projektu \\
+assigned\_to & BIGINT & NULL & FK & ID przypisanego użytk. \\
+created\_at & DATE & NOT NULL & -- & Data utworzenia \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Tabela PROJECT\_USER (relacja N:M)}
+
+\begin{table}[H]
+\centering
+\caption{Struktura tabeli PROJECT\_USER}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Kolumna} & \textbf{Typ} & \textbf{Null} & \textbf{Klucz} & \textbf{Opis} \\
+\hline
+project\_id & BIGINT & NOT NULL & PK, FK & ID projektu \\
+user\_id & BIGINT & NOT NULL & PK, FK & ID użytkownika \\
+role & VARCHAR(20) & NOT NULL & -- & Rola w projekcie \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Tabela AUDIT\_LOGS}
+
+\begin{table}[H]
+\centering
+\caption{Struktura tabeli AUDIT\_LOGS}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Kolumna} & \textbf{Typ} & \textbf{Null} & \textbf{Klucz} & \textbf{Opis} \\
+\hline
+id & BIGSERIAL & NOT NULL & PK & Identyfikator \\
+user\_id & BIGINT & NOT NULL & FK & ID użytkownika \\
+action & VARCHAR(50) & NOT NULL & -- & Typ akcji \\
+entity & VARCHAR(100) & NOT NULL & -- & Nazwa encji \\
+entity\_id & BIGINT & NOT NULL & -- & ID encji \\
+details & VARCHAR(1000) & NULL & -- & Szczegóły \\
+ip\_address & VARCHAR(45) & NULL & -- & Adres IP \\
+timestamp & TIMESTAMP & NOT NULL & -- & Czas operacji \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Tabela NOTIFICATIONS}
+
+\begin{table}[H]
+\centering
+\caption{Struktura tabeli NOTIFICATIONS}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Kolumna} & \textbf{Typ} & \textbf{Null} & \textbf{Klucz} & \textbf{Opis} \\
+\hline
+id & BIGSERIAL & NOT NULL & PK & Identyfikator \\
+user\_id & BIGINT & NOT NULL & FK & ID użytkownika \\
+message & VARCHAR(500) & NOT NULL & -- & Treść powiadomienia \\
+read & BOOLEAN & NOT NULL & -- & Czy przeczytane \\
+type & VARCHAR(50) & NULL & -- & Typ powiadomienia \\
+related\_entity\_id & BIGINT & NULL & -- & ID powiązanej encji \\
+related\_entity\_type & VARCHAR(100) & NULL & -- & Typ powiązanej encji \\
+created\_at & DATE & NOT NULL & -- & Data utworzenia \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Główne kwerendy systemu}
+
+\subsection{Kwerendy JPQL w repozytoriach}
+
+\begin{lstlisting}[style=javastyle, caption={ProjectUserRepository - zapytania}]
+// Pobranie uzytkownikow projektu z eagerly loaded User
+@Query("SELECT pu FROM ProjectUser pu 
+        JOIN FETCH pu.user 
+        WHERE pu.project.id = :projectId")
+List<ProjectUser> findByProjectIdWithUsers(
+    @Param("projectId") Long projectId);
+
+// Sprawdzenie czy uzytkownik nalezy do projektu
+boolean existsByProjectIdAndUserId(
+    Long projectId, Long userId);
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={AuditLogRepository - zapytania}]
+// Pobranie logow z zakresu dat
+@Query("SELECT a FROM AuditLog a 
+        WHERE a.timestamp BETWEEN :startDate AND :endDate 
+        ORDER BY a.timestamp DESC")
+List<AuditLog> findByTimestampBetween(
+    @Param("startDate") LocalDateTime startDate, 
+    @Param("endDate") LocalDateTime endDate);
+
+// Pobranie ostatnich logow uzytkownika
+@Query("SELECT a FROM AuditLog a 
+        WHERE a.user.id = :userId AND a.timestamp >= :since 
+        ORDER BY a.timestamp DESC")
+List<AuditLog> findRecentByUserId(
+    @Param("userId") Long userId, 
+    @Param("since") LocalDateTime since);
+
+// Zliczanie akcji dla encji
+@Query("SELECT COUNT(a) FROM AuditLog a 
+        WHERE a.entity = :entity AND a.action = :action")
+Long countByEntityAndAction(
+    @Param("entity") String entity, 
+    @Param("action") String action);
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={NotificationRepository - zapytania}]
+// Oznaczenie wszystkich jako przeczytane
+@Modifying
+@Query("UPDATE Notification n 
+        SET n.read = true 
+        WHERE n.user.id = :userId AND n.read = false")
+int markAllAsReadByUserId(@Param("userId") Long userId);
+
+// Zliczanie nieprzeczytanych
+@Query("SELECT COUNT(n) FROM Notification n 
+        WHERE n.user.id = :userId AND n.read = false")
+Long countUnreadByUserId(@Param("userId") Long userId);
+\end{lstlisting}
+
+\subsection{Widoki SQL (Views)}
+
+\begin{lstlisting}[style=sqlstyle, caption={Widok statystyk projektów}]
+CREATE OR REPLACE VIEW v_project_statistics AS
+SELECT 
+    p.id AS project_id,
+    p.name AS project_name,
+    p.status,
+    COUNT(DISTINCT t.id) AS total_tasks,
+    COUNT(DISTINCT CASE WHEN t.status = 'DONE' 
+          THEN t.id END) AS completed_tasks,
+    COUNT(DISTINCT pu.user_id) AS team_members,
+    COUNT(DISTINCT pc.id) AS total_comments,
+    COUNT(DISTINCT pf.id) AS total_files
+FROM projects p
+LEFT JOIN tasks t ON t.project_id = p.id
+LEFT JOIN project_user pu ON pu.project_id = p.id
+LEFT JOIN project_comments pc ON pc.project_id = p.id
+LEFT JOIN project_files pf ON pf.project_id = p.id
+GROUP BY p.id, p.name, p.status;
+\end{lstlisting}
+
+\begin{lstlisting}[style=sqlstyle, caption={Widok zadań po terminie}]
+CREATE OR REPLACE VIEW v_overdue_tasks AS
+SELECT 
+    t.id AS task_id,
+    t.name AS task_name,
+    t.due_date,
+    t.status,
+    p.name AS project_name,
+    CONCAT(u.first_name, ' ', u.last_name) AS assigned_to_name,
+    CURRENT_DATE - t.due_date AS days_overdue
+FROM tasks t
+JOIN projects p ON p.id = t.project_id
+LEFT JOIN users u ON u.id = t.assigned_to
+WHERE t.due_date < CURRENT_DATE 
+  AND t.status != 'DONE'
+ORDER BY days_overdue DESC;
+\end{lstlisting}
+
+\section{Formularze i endpointy API}
+
+\subsection{Endpointy REST API}
+
+\begin{longtable}{|l|l|p{6cm}|}
+\caption{Lista głównych endpointów API} \\
+\hline
+\textbf{Metoda} & \textbf{Endpoint} & \textbf{Opis} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Metoda} & \textbf{Endpoint} & \textbf{Opis} \\
+\hline
+\endhead
+\multicolumn{3}{|c|}{\textbf{Autentykacja}} \\
+\hline
+POST & /api/auth/register & Rejestracja użytkownika \\
+POST & /api/auth/login & Logowanie \\
+POST & /api/auth/refresh & Odświeżenie tokenu \\
+POST & /api/auth/forgot-password & Żądanie resetu hasła \\
+POST & /api/auth/reset-password & Reset hasła \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Projekty}} \\
+\hline
+GET & /api/projects & Lista projektów \\
+POST & /api/projects & Tworzenie projektu \\
+GET & /api/projects/\{id\} & Szczegóły projektu \\
+PUT & /api/projects/\{id\} & Aktualizacja projektu \\
+DELETE & /api/projects/\{id\} & Usunięcie projektu \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Zadania}} \\
+\hline
+GET & /api/tasks & Lista zadań \\
+POST & /api/tasks & Tworzenie zadania \\
+GET & /api/tasks/\{id\} & Szczegóły zadania \\
+PUT & /api/tasks/\{id\} & Aktualizacja zadania \\
+DELETE & /api/tasks/\{id\} & Usunięcie zadania \\
+GET & /api/tasks/project/\{projectId\} & Zadania projektu \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Powiadomienia}} \\
+\hline
+GET & /api/notifications & Lista powiadomień \\
+GET & /api/notifications/unread & Nieprzeczytane \\
+PUT & /api/notifications/\{id\}/read & Oznacz jako przeczytane \\
+PUT & /api/notifications/read-all & Oznacz wszystkie \\
+DELETE & /api/notifications/\{id\} & Usuń powiadomienie \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Audyt (Admin)}} \\
+\hline
+GET & /api/audit & Wszystkie logi \\
+GET & /api/audit/user/\{userId\} & Logi użytkownika \\
+GET & /api/audit/entity/\{entity\}/\{id\} & Logi encji \\
+\hline
+\end{longtable}
+
+\subsection{Przykładowe formularze (DTO)}
+
+\begin{lstlisting}[style=javastyle, caption={RegisterRequest - formularz rejestracji}]
+@Data
+@Builder
+public class RegisterRequest {
+    @NotBlank(message = "Imie jest wymagane")
+    @Size(min = 1, max = 50)
+    private String firstName;
+    
+    @NotBlank(message = "Nazwisko jest wymagane")
+    @Size(min = 1, max = 50)
+    private String lastName;
+    
+    @NotBlank(message = "Email jest wymagany")
+    @Email(message = "Nieprawidlowy format email")
+    private String email;
+    
+    @NotBlank(message = "Haslo jest wymagane")
+    @Size(min = 6, message = "Haslo min. 6 znakow")
+    private String password;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={ProjectRequest - formularz projektu}]
+@Data
+@Builder
+public class ProjectRequest {
+    @NotBlank(message = "Nazwa projektu jest wymagana")
+    @Size(min = 1, max = 255)
+    private String name;
+    
+    @Size(max = 1000)
+    private String description;
+    
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private ProjectStatus status;
+}
+\end{lstlisting}
+
+% ============================================================================
+% ROZDZIAŁ 3: NORMALIZACJA I WIĘZY
+% ============================================================================
+\chapter{Normalizacja i więzy tabel}
+
+\section{Analiza normalizacji}
+
+\subsection{Pierwsza Postać Normalna (1NF)}
+
+Wszystkie tabele w systemie spełniają wymagania 1NF:
+
+\begin{itemize}
+    \item Każda kolumna zawiera wartości atomowe (niepodzielne)
+    \item Każda tabela posiada klucz główny (PRIMARY KEY)
+    \item Brak powtarzających się grup kolumn
+    \item Każda komórka zawiera pojedynczą wartość
+\end{itemize}
+
+\textbf{Przykład -- tabela USERS:}
+\begin{itemize}
+    \item Imię i nazwisko rozdzielone na osobne kolumny (first\_name, last\_name)
+    \item Email jako pojedyncza wartość
+    \item Brak list ani tablic w kolumnach
+\end{itemize}
+
+\subsection{Druga Postać Normalna (2NF)}
+
+Wszystkie tabele spełniają 2NF:
+
+\begin{itemize}
+    \item Spełniają 1NF
+    \item Wszystkie atrybuty niekluczowe są w pełni funkcyjnie zależne od klucza głównego
+    \item Brak częściowych zależności funkcyjnych
+\end{itemize}
+
+\textbf{Przykład -- tabela PROJECT\_USER:}
+\begin{itemize}
+    \item Klucz złożony: (project\_id, user\_id)
+    \item Atrybut \texttt{role} zależy od całego klucza złożonego
+    \item Nie można określić roli znając tylko projekt lub tylko użytkownika
+\end{itemize}
+
+\subsection{Trzecia Postać Normalna (3NF)}
+
+Wszystkie tabele spełniają 3NF:
+
+\begin{itemize}
+    \item Spełniają 2NF
+    \item Brak zależności przechodnich
+    \item Każdy atrybut niekluczowy zależy bezpośrednio od klucza głównego
+\end{itemize}
+
+\textbf{Przykład -- tabela TASKS:}
+\begin{itemize}
+    \item Wszystkie atrybuty (name, description, status, due\_date) zależą bezpośrednio od id
+    \item project\_id i assigned\_to to klucze obce, nie powodują zależności przechodnich
+    \item Dane projektu nie są duplikowane w tabeli zadań
+\end{itemize}
+
+\subsection{Postać Normalna Boyce'a-Codda (BCNF)}
+
+Tabela PROJECT\_USER jest w BCNF:
+\begin{itemize}
+    \item Każdy wyznacznik jest kluczem kandydującym
+    \item Klucz złożony (project\_id, user\_id) jest jedynym wyznacznikiem
+\end{itemize}
+
+\section{Więzy integralności}
+
+\subsection{Więzy klucza głównego (PRIMARY KEY)}
+
+\begin{lstlisting}[style=sqlstyle, caption={Definicje kluczy głównych}]
+-- Klucz prosty
+ALTER TABLE users ADD CONSTRAINT pk_users PRIMARY KEY (id);
+ALTER TABLE projects ADD CONSTRAINT pk_projects PRIMARY KEY (id);
+ALTER TABLE tasks ADD CONSTRAINT pk_tasks PRIMARY KEY (id);
+
+-- Klucz zlozony
+ALTER TABLE project_user 
+ADD CONSTRAINT pk_project_user PRIMARY KEY (project_id, user_id);
+\end{lstlisting}
+
+\subsection{Więzy klucza obcego (FOREIGN KEY)}
+
+\begin{lstlisting}[style=sqlstyle, caption={Definicje kluczy obcych}]
+-- Projects -> Users (tworca)
+ALTER TABLE projects 
+ADD CONSTRAINT fk_project_creator 
+FOREIGN KEY (created_by) REFERENCES users(id)
+ON DELETE RESTRICT;
+
+-- Tasks -> Projects
+ALTER TABLE tasks 
+ADD CONSTRAINT fk_task_project 
+FOREIGN KEY (project_id) REFERENCES projects(id)
+ON DELETE CASCADE;
+
+-- Tasks -> Users (przypisanie)
+ALTER TABLE tasks 
+ADD CONSTRAINT fk_task_assignee 
+FOREIGN KEY (assigned_to) REFERENCES users(id)
+ON DELETE SET NULL;
+
+-- Project_User -> Projects
+ALTER TABLE project_user 
+ADD CONSTRAINT fk_pu_project 
+FOREIGN KEY (project_id) REFERENCES projects(id)
+ON DELETE CASCADE;
+
+-- Project_User -> Users
+ALTER TABLE project_user 
+ADD CONSTRAINT fk_pu_user 
+FOREIGN KEY (user_id) REFERENCES users(id)
+ON DELETE CASCADE;
+\end{lstlisting}
+
+\subsection{Więzy unikalności (UNIQUE)}
+
+\begin{lstlisting}[style=sqlstyle, caption={Więzy UNIQUE}]
+-- Unikalny email uzytkownika
+ALTER TABLE users ADD CONSTRAINT uq_user_email UNIQUE (email);
+
+-- Unikalna nazwa przechowywanego pliku
+ALTER TABLE project_files 
+ADD CONSTRAINT uq_stored_filename UNIQUE (stored_file_name);
+
+-- Unikalny token odswiezania
+ALTER TABLE refresh_tokens ADD CONSTRAINT uq_token UNIQUE (token);
+\end{lstlisting}
+
+\subsection{Więzy CHECK}
+
+\begin{lstlisting}[style=sqlstyle, caption={Więzy CHECK}]
+-- Walidacja statusu projektu
+ALTER TABLE projects ADD CONSTRAINT chk_project_status 
+CHECK (status IN ('NOT_STARTED', 'IN_PROGRESS', 
+                  'ON_HOLD', 'COMPLETED', 'CANCELLED'));
+
+-- Walidacja statusu zadania
+ALTER TABLE tasks ADD CONSTRAINT chk_task_status 
+CHECK (status IN ('TODO', 'IN_PROGRESS', 'REVIEW', 'DONE'));
+
+-- Walidacja roli uzytkownika
+ALTER TABLE users ADD CONSTRAINT chk_user_role 
+CHECK (role IN ('USER', 'ADMIN'));
+
+-- Walidacja roli w projekcie
+ALTER TABLE project_user ADD CONSTRAINT chk_project_role 
+CHECK (role IN ('OWNER', 'MEMBER', 'VIEWER'));
+
+-- Walidacja rozmiaru pliku
+ALTER TABLE project_files ADD CONSTRAINT chk_file_size 
+CHECK (file_size > 0);
+
+-- Walidacja dat projektu
+ALTER TABLE projects ADD CONSTRAINT chk_project_dates 
+CHECK (end_date IS NULL OR start_date IS NULL 
+       OR end_date >= start_date);
+\end{lstlisting}
+
+\subsection{Więzy NOT NULL}
+
+\begin{lstlisting}[style=sqlstyle, caption={Więzy NOT NULL}]
+-- Tabela users
+ALTER TABLE users ALTER COLUMN first_name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN last_name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN email SET NOT NULL;
+ALTER TABLE users ALTER COLUMN password SET NOT NULL;
+ALTER TABLE users ALTER COLUMN role SET NOT NULL;
+
+-- Tabela projects
+ALTER TABLE projects ALTER COLUMN name SET NOT NULL;
+ALTER TABLE projects ALTER COLUMN status SET NOT NULL;
+ALTER TABLE projects ALTER COLUMN created_by SET NOT NULL;
+
+-- Tabela tasks
+ALTER TABLE tasks ALTER COLUMN name SET NOT NULL;
+ALTER TABLE tasks ALTER COLUMN status SET NOT NULL;
+ALTER TABLE tasks ALTER COLUMN project_id SET NOT NULL;
+\end{lstlisting}
+
+\section{Akcje referencyjne}
+
+\begin{table}[H]
+\centering
+\caption{Akcje referencyjne dla kluczy obcych}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Tabela} & \textbf{FK} & \textbf{ON DELETE} & \textbf{Uzasadnienie} \\
+\hline
+projects & created\_by & RESTRICT & Nie usuwaj użytkownika z projektami \\
+tasks & project\_id & CASCADE & Usuń zadania z projektem \\
+tasks & assigned\_to & SET NULL & Zachowaj zadanie, usuń przypisanie \\
+project\_user & project\_id & CASCADE & Usuń powiązania z projektem \\
+project\_user & user\_id & CASCADE & Usuń powiązania użytkownika \\
+comments & project\_id & CASCADE & Usuń komentarze z projektem \\
+comments & user\_id & CASCADE & Usuń komentarze użytkownika \\
+files & project\_id & CASCADE & Usuń pliki z projektem \\
+notifications & user\_id & CASCADE & Usuń powiadomienia użytkownika \\
+audit\_logs & user\_id & CASCADE & Usuń logi użytkownika \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% ROZDZIAŁ 4: KONTROLA POPRAWNOŚCI DANYCH
+% ============================================================================
+\chapter{Kontrola poprawności danych}
+
+\section{Walidacja na poziomie encji (Bean Validation)}
+
+System wykorzystuje Jakarta Bean Validation (JSR-380) do walidacji danych na poziomie modelu.
+
+\begin{lstlisting}[style=javastyle, caption={Walidacja w encji User}]
+@Entity
+@Table(name = "users")
+public class User {
+
+    @NotBlank(message = "Imie jest wymagane")
+    @Size(min = 1, max = 50, 
+          message = "Imie musi miec od 1 do 50 znakow")
+    @Column(nullable = false, length = 50)
+    private String firstName;
+
+    @NotBlank(message = "Nazwisko jest wymagane")
+    @Size(min = 1, max = 50, 
+          message = "Nazwisko musi miec od 1 do 50 znakow")
+    @Column(nullable = false, length = 50)
+    private String lastName;
+
+    @NotBlank(message = "Email jest wymagany")
+    @Email(message = "Nieprawidlowy format email")
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={Walidacja w encji Project}]
+@Entity
+@Table(name = "projects")
+public class Project {
+
+    @NotBlank(message = "Nazwa projektu jest wymagana")
+    @Size(min = 1, max = 255, 
+          message = "Nazwa projektu musi miec od 1 do 255 znakow")
+    @Column(nullable = false, length = 255)
+    private String name;
+
+    @Size(max = 1000, 
+          message = "Opis nie moze przekraczac 1000 znakow")
+    @Column(length = 1000)
+    private String description;
+
+    // Walidacja dat w metodzie @PrePersist/@PreUpdate
+    @PrePersist
+    @PreUpdate
+    private void validateDates() {
+        if (startDate != null && endDate != null 
+            && endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException(
+                "Data zakonczenia nie moze byc 
+                 wczesniejsza niz data rozpoczecia");
+        }
+    }
+}
+\end{lstlisting}
+
+\section{Walidacja w kontrolerach}
+
+\begin{lstlisting}[style=javastyle, caption={Walidacja w kontrolerze z @Valid}]
+@RestController
+@RequestMapping("/api/projects")
+public class ProjectController {
+
+    @PostMapping
+    public ResponseEntity<ProjectResponse> createProject(
+            @Valid @RequestBody ProjectRequest request,
+            Authentication authentication) {
+        // @Valid wymusza walidacje przed wykonaniem metody
+        ProjectResponse response = projectService
+            .createProject(request, authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(response);
+    }
+}
+\end{lstlisting}
+
+\section{Obsługa wyjątków}
+
+\begin{lstlisting}[style=javastyle, caption={GlobalExceptionHandler}]
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    // Obsluga bledow walidacji
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> 
+            handleValidationExceptions(
+                MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    // Obsluga ResourceNotFoundException
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> 
+            handleResourceNotFound(ResourceNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(error);
+    }
+
+    // Obsluga UnauthorizedOperationException
+    @ExceptionHandler(UnauthorizedOperationException.class)
+    public ResponseEntity<ErrorResponse> 
+            handleUnauthorized(UnauthorizedOperationException ex) {
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.FORBIDDEN.value(),
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(error);
+    }
+}
+\end{lstlisting}
+
+\section{Wartości domyślne}
+
+\begin{lstlisting}[style=javastyle, caption={Wartości domyślne w encjach}]
+@Entity
+public class Project {
+    // Domyslny status projektu
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private ProjectStatus status = ProjectStatus.NOT_STARTED;
+}
+
+@Entity
+public class Notification {
+    // Domyslna wartosc "przeczytane"
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean read = false;
+}
+
+@Entity
+public class User {
+    // Automatyczna data utworzenia
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+}
+\end{lstlisting}
+
+\section{Walidacja plików}
+
+\begin{lstlisting}[style=javastyle, caption={Walidacja uploadowanych plików}]
+@Service
+public class FileStorageService {
+
+    private static final List<String> ALLOWED_TYPES = Arrays.asList(
+        "image/jpeg", "image/png", "image/gif",
+        "application/pdf", "application/msword",
+        "application/vnd.openxmlformats-officedocument"
+    );
+
+    @Value("${file.max-file-size-mb}")
+    private int maxFileSizeMb;
+
+    public String storeFile(MultipartFile file, String subDir) {
+        // Walidacja rozmiaru
+        if (file.getSize() > maxFileSizeMb * 1024 * 1024) {
+            throw new FileStorageException(
+                "Plik przekracza maksymalny rozmiar " 
+                + maxFileSizeMb + "MB");
+        }
+
+        // Walidacja typu
+        String contentType = file.getContentType();
+        if (contentType == null || 
+            !ALLOWED_TYPES.contains(contentType)) {
+            throw new FileStorageException(
+                "Niedozwolony typ pliku: " + contentType);
+        }
+
+        // Walidacja nazwy pliku
+        String originalFilename = StringUtils
+            .cleanPath(file.getOriginalFilename());
+        if (originalFilename.contains("..")) {
+            throw new FileStorageException(
+                "Nazwa pliku zawiera nieprawidlowa sciezke");
+        }
+
+        // Generowanie unikalnej nazwy
+        String storedFileName = UUID.randomUUID().toString() 
+            + "_" + originalFilename;
+        
+        // Zapisanie pliku...
+        return storedFileName;
+    }
+}
+\end{lstlisting}
+
+\section{Maski wprowadzania (wzorce regex)}
+
+\begin{lstlisting}[style=javastyle, caption={Wzorce walidacji}]
+public class ValidationPatterns {
+    
+    // Wzorzec email
+    public static final String EMAIL_PATTERN = 
+        "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    
+    // Wzorzec hasla (min 8 znakow, litera, cyfra)
+    public static final String PASSWORD_PATTERN = 
+        "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$";
+    
+    // Wzorzec nazwy uzytkownika
+    public static final String USERNAME_PATTERN = 
+        "^[a-zA-Z][a-zA-Z0-9_]{2,29}$";
+}
+
+// Uzycie w DTO
+public class RegisterRequest {
+    @Pattern(regexp = ValidationPatterns.EMAIL_PATTERN,
+             message = "Nieprawidlowy format email")
+    private String email;
+    
+    @Pattern(regexp = ValidationPatterns.PASSWORD_PATTERN,
+             message = "Haslo musi zawierac min. 8 znakow, "
+                     + "litere i cyfre")
+    private String password;
+}
+\end{lstlisting}
+
+% ============================================================================
+% ROZDZIAŁ 5: AUTOMATYCZNE TWORZENIE TABEL
+% ============================================================================
+\chapter{Automatyczne tworzenie tabel}
+
+\section{Konfiguracja Hibernate DDL}
+
+System wykorzystuje Hibernate do automatycznego tworzenia i aktualizacji schematu bazy danych.
+
+\begin{lstlisting}[style=propstyle, caption={application.properties - konfiguracja DDL}]
+# Konfiguracja JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=
+    org.hibernate.dialect.PostgreSQLDialect
+
+# Dla srodowiska produkcyjnego:
+# spring.jpa.hibernate.ddl-auto=validate
+\end{lstlisting}
+
+\subsection{Dostępne tryby ddl-auto}
+
+\begin{table}[H]
+\centering
+\caption{Tryby ddl-auto w Hibernate}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Tryb} & \textbf{Opis} \\
+\hline
+\texttt{none} & Brak automatycznego zarządzania schematem \\
+\texttt{validate} & Waliduje schemat, nie wprowadza zmian \\
+\texttt{update} & Aktualizuje schemat (dodaje brakujące elementy) \\
+\texttt{create} & Tworzy schemat przy starcie (usuwa istniejący) \\
+\texttt{create-drop} & Tworzy przy starcie, usuwa przy zamknięciu \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Definicje encji JPA}
+
+\begin{lstlisting}[style=javastyle, caption={Encja Project z adnotacjami JPA}]
+@Entity
+@Table(name = "projects", indexes = {
+    @Index(name = "idx_project_created_by", 
+           columnList = "created_by"),
+    @Index(name = "idx_project_status", 
+           columnList = "status"),
+    @Index(name = "idx_project_created_at", 
+           columnList = "createdAt"),
+    @Index(name = "idx_project_name", 
+           columnList = "name")
+})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Project {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 255)
+    private String name;
+
+    @Column(length = 1000)
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private ProjectStatus status = ProjectStatus.NOT_STARTED;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
+
+    // Relacje z kaskadowym usuwaniem
+    @OneToMany(mappedBy = "project", 
+               cascade = CascadeType.ALL, 
+               orphanRemoval = true)
+    @Builder.Default
+    private List<Task> tasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", 
+               cascade = CascadeType.ALL, 
+               orphanRemoval = true)
+    @Builder.Default
+    private List<ProjectComment> comments = new ArrayList<>();
+}
+\end{lstlisting}
+
+\section{Inicjalizacja danych testowych}
+
+\begin{lstlisting}[style=javastyle, caption={DatabaseInitializer - inicjalizacja danych}]
+@Component
+@RequiredArgsConstructor
+public class DatabaseInitializer implements CommandLineRunner {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ProjectRepository projectRepository;
+    private final TaskRepository taskRepository;
+
+    @Override
+    public void run(String... args) {
+        // Sprawdz czy baza jest pusta
+        if (userRepository.count() == 0) {
+            initUsers();
+        }
+
+        if (projectRepository.count() == 0) {
+            initProjects();
+        }
+
+        if (taskRepository.count() == 0) {
+            initTasks();
+        }
+    }
+
+    private void initUsers() {
+        List<User> users = Arrays.asList(
+            User.builder()
+                .firstName("Admin")
+                .lastName("Systemowy")
+                .email("admin@example.com")
+                .password(passwordEncoder.encode("admin123"))
+                .role(Role.ADMIN)
+                .build(),
+            User.builder()
+                .firstName("Jan")
+                .lastName("Kowalski")
+                .email("jan@example.com")
+                .password(passwordEncoder.encode("user123"))
+                .role(Role.USER)
+                .build()
+        );
+        userRepository.saveAll(users);
+    }
+}
+\end{lstlisting}
+
+% ============================================================================
+% ROZDZIAŁ 6: REJESTRACJA DATY I CZASU
+% ============================================================================
+\chapter{Rejestracja daty i czasu operacji}
+
+\section{Automatyczne znaczniki czasowe}
+
+System wykorzystuje adnotacje Hibernate do automatycznego rejestrowania znaczników czasowych.
+
+\begin{lstlisting}[style=javastyle, caption={Automatyczne timestampy w encjach}]
+@Entity
+public class User {
+    // Automatyczna data utworzenia - niemodyfikowalna
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+}
+
+@Entity
+public class AuditLog {
+    // Automatyczny timestamp operacji
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime timestamp;
+}
+
+@Entity
+public class ProjectComment {
+    // Data utworzenia
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    // Data modyfikacji - reczna aktualizacja
+    @Column
+    private LocalDateTime updatedAt;
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+}
+\end{lstlisting}
+
+\section{System audytu}
+
+\begin{lstlisting}[style=javastyle, caption={AuditLogService - logowanie operacji}]
+@Service
+@RequiredArgsConstructor
+public class AuditLogService {
+
+    private final AuditLogRepository auditLogRepository;
+    private final UserRepository userRepository;
+
+    // Logowanie akcji asynchronicznie
+    @Async
+    @Transactional
+    public void logActionAsync(String userEmail, String action, 
+                               String entity, Long entityId) {
+        logAction(userEmail, action, entity, entityId);
+    }
+
+    // Logowanie akcji synchronicznie
+    @Transactional
+    public AuditLog logAction(String userEmail, String action, 
+                              String entity, Long entityId) {
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> 
+                new ResourceNotFoundException("User", "email", userEmail));
+        
+        AuditLog auditLog = AuditLog.builder()
+            .user(user)
+            .action(action)
+            .entity(entity)
+            .entityId(entityId)
+            .ipAddress(SecurityUtils.getClientIpAddress())
+            .build();
+        
+        return auditLogRepository.save(auditLog);
+    }
+
+    // Stale dla typow akcji
+    public static final String ACTION_CREATE = "CREATE";
+    public static final String ACTION_UPDATE = "UPDATE";
+    public static final String ACTION_DELETE = "DELETE";
+    public static final String ACTION_VIEW = "VIEW";
+}
+\end{lstlisting}
+
+\section{Integracja audytu z serwisami}
+
+\begin{lstlisting}[style=javastyle, caption={Użycie audytu w ProjectService}]
+@Service
+@RequiredArgsConstructor
+public class ProjectService {
+
+    private final AuditLogService auditLogService;
+
+    @Transactional
+    public ProjectResponse createProject(
+            ProjectRequest request, String userEmail) {
+        // ... tworzenie projektu ...
+        
+        Project savedProject = projectRepository.save(project);
+        
+        // Logowanie audytu
+        auditLogService.logActionAsync(
+            userEmail, 
+            AuditLogService.ACTION_CREATE, 
+            AuditLogService.ENTITY_PROJECT, 
+            savedProject.getId()
+        );
+        
+        return convertToResponse(savedProject);
+    }
+
+    @Transactional
+    public void deleteProject(Long projectId, String userEmail) {
+        // ... walidacja ...
+        
+        // Logowanie PRZED usunieciem (synchronicznie)
+        auditLogService.logAction(
+            userEmail, 
+            AuditLogService.ACTION_DELETE, 
+            AuditLogService.ENTITY_PROJECT, 
+            projectId
+        );
+        
+        projectRepository.delete(project);
+    }
+}
+\end{lstlisting}
+
+\section{Możliwość ręcznej korekty}
+
+\begin{lstlisting}[style=javastyle, caption={Ręczna korekta timestamp (Admin)}]
+@RestController
+@RequestMapping("/api/admin/audit")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminAuditController {
+
+    @PutMapping("/{logId}/timestamp")
+    public ResponseEntity<AuditLogResponse> correctTimestamp(
+            @PathVariable Long logId,
+            @RequestBody TimestampCorrectionRequest request) {
+        
+        AuditLog log = auditLogRepository.findById(logId)
+            .orElseThrow(() -> 
+                new ResourceNotFoundException("AuditLog", "id", logId));
+        
+        // Reczna korekta timestamp (wymaga uprawnien ADMIN)
+        // Pole timestamp w AuditLog musi byc bez "updatable = false"
+        log.setTimestamp(request.getNewTimestamp());
+        
+        // Loguj korekte
+        auditLogService.logAction(
+            getCurrentUserEmail(),
+            "TIMESTAMP_CORRECTION",
+            "AuditLog",
+            logId
+        );
+        
+        return ResponseEntity.ok(convertToResponse(
+            auditLogRepository.save(log)));
+    }
+}
+\end{lstlisting}
+
+% ============================================================================
+% ROZDZIAŁ 7: INSTRUKCJA OBSŁUGI
+% ============================================================================
+\chapter{Instrukcja obsługi}
+
+\section{Wymagania systemowe}
+
+\begin{table}[H]
+\centering
+\caption{Wymagania systemowe}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Komponent} & \textbf{Wersja minimalna} \\
+\hline
+Java JDK & 23 \\
+PostgreSQL & 15 \\
+Gradle & 8.0 \\
+Docker (opcjonalnie) & 20.0 \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Instalacja}
+
+\subsection{Klonowanie repozytorium}
+
+\begin{lstlisting}[language=bash, caption={Klonowanie projektu}]
+git clone https://github.com/puchacz51/zw-backend.git
+cd zw-backend
+\end{lstlisting}
+
+\subsection{Konfiguracja bazy danych}
+
+\begin{lstlisting}[style=propstyle, caption={application.properties}]
+# Konfiguracja polaczenia z baza danych
+spring.datasource.url=jdbc:postgresql://localhost:5432/mydatabase
+spring.datasource.username=user
+spring.datasource.password=secret
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Konfiguracja JWT
+jwt.secret=twojBardzoTajnyKlucz256bitow
+jwt.accessTokenExpirationMs=3600000
+jwt.refreshTokenExpirationMs=86400000
+
+# Konfiguracja plikow
+file.base-upload-dir=./uploads
+file.max-file-size-mb=50
+\end{lstlisting}
+
+\subsection{Uruchomienie z Docker Compose}
+
+\begin{lstlisting}[language=bash, caption={Uruchomienie z Docker}]
+# Uruchomienie bazy danych i aplikacji
+docker-compose up -d
+
+# Sprawdzenie statusu
+docker-compose ps
+
+# Logi aplikacji
+docker-compose logs -f app
+\end{lstlisting}
+
+\subsection{Uruchomienie lokalne}
+
+\begin{lstlisting}[language=bash, caption={Uruchomienie lokalne}]
+# Kompilacja projektu
+./gradlew build
+
+# Uruchomienie aplikacji
+./gradlew bootRun
+
+# Lub uruchomienie JAR
+java -jar build/libs/zw-backend-0.0.1-SNAPSHOT.jar
+\end{lstlisting}
+
+\section{Dokumentacja API}
+
+Po uruchomieniu aplikacji, dokumentacja API dostępna jest pod adresami:
+
+\begin{itemize}
+    \item \textbf{Swagger UI:} \url{http://localhost:8080/swagger-ui.html}
+    \item \textbf{OpenAPI JSON:} \url{http://localhost:8080/v3/api-docs}
+\end{itemize}
+
+\section{Przykłady użycia API}
+
+\subsection{Rejestracja użytkownika}
+
+\begin{lstlisting}[language=bash, caption={curl - rejestracja}]
+curl -X POST http://localhost:8080/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Jan",
+    "lastName": "Kowalski",
+    "email": "jan@example.com",
+    "password": "haslo123"
+  }'
+\end{lstlisting}
+
+\subsection{Logowanie}
+
+\begin{lstlisting}[language=bash, caption={curl - logowanie}]
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "jan@example.com",
+    "password": "haslo123"
+  }'
+\end{lstlisting}
+
+\subsection{Tworzenie projektu}
+
+\begin{lstlisting}[language=bash, caption={curl - tworzenie projektu}]
+curl -X POST http://localhost:8080/api/projects \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -d '{
+    "name": "Nowy Projekt",
+    "description": "Opis projektu",
+    "startDate": "2026-01-28",
+    "endDate": "2026-06-30"
+  }'
+\end{lstlisting}
+
+\section{Uruchomienie testów}
+
+\begin{lstlisting}[language=bash, caption={Uruchomienie testów}]
+# Wszystkie testy
+./gradlew test
+
+# Testy jednostkowe
+./gradlew test --tests "*Test"
+
+# Testy integracyjne
+./gradlew test --tests "*IntegrationTest"
+
+# Raport z testow
+open build/reports/tests/test/index.html
+\end{lstlisting}
+
+% ============================================================================
+% ROZDZIAŁ 8: KOD ŹRÓDŁOWY
+% ============================================================================
+\chapter{Kod źródłowy -- wybrane fragmenty}
+
+\section{Struktura projektu}
+
+\begin{lstlisting}[language=bash, caption={Struktura katalogów}]
+src/
+|-- main/
+|   |-- java/pl/pbs/zwbackend/
+|   |   |-- ZwBackendApplication.java
+|   |   |-- config/
+|   |   |   |-- SecurityConfig.java
+|   |   |   |-- OpenApiConfig.java
+|   |   |   |-- AsyncConfig.java
+|   |   |-- controller/
+|   |   |   |-- AuthController.java
+|   |   |   |-- ProjectController.java
+|   |   |   |-- TaskController.java
+|   |   |   |-- NotificationController.java
+|   |   |   |-- AuditLogController.java
+|   |   |-- dto/
+|   |   |-- exception/
+|   |   |-- model/
+|   |   |   |-- User.java
+|   |   |   |-- Project.java
+|   |   |   |-- Task.java
+|   |   |   |-- enums/
+|   |   |-- repository/
+|   |   |-- security/
+|   |   |-- service/
+|   |   |-- util/
+|   |-- resources/
+|       |-- application.properties
+|-- test/
+    |-- java/pl/pbs/zwbackend/
+        |-- controller/
+        |-- integration/
+        |-- repository/
+        |-- service/
+\end{lstlisting}
+
+\section{Główna klasa aplikacji}
+
+\begin{lstlisting}[style=javastyle, caption={ZwBackendApplication.java}]
+package pl.pbs.zwbackend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+@SpringBootApplication
+@EnableAsync
+public class ZwBackendApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ZwBackendApplication.class, args);
+    }
+}
+\end{lstlisting}
+
+\section{Konfiguracja bezpieczeństwa}
+
+\begin{lstlisting}[style=javastyle, caption={SecurityConfig.java}]
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final CustomUserDetailsService userDetailsService;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(
+                corsConfigurationSource()))
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/admin/**")
+                    .hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthFilter, 
+                UsernamePasswordAuthenticationFilter.class);
+        
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+\end{lstlisting}
+
+\section{Kontroler autentykacji}
+
+\begin{lstlisting}[style=javastyle, caption={AuthController.java}]
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@Tag(name = "Authentication", 
+     description = "API do autentykacji")
+public class AuthController {
+
+    private final AuthenticationManager authManager;
+    private final JwtTokenProvider jwtProvider;
+    private final UserService userService;
+
+    @PostMapping("/register")
+    @Operation(summary = "Rejestracja nowego uzytkownika")
+    public ResponseEntity<UserSummaryResponse> register(
+            @Valid @RequestBody RegisterRequest request) {
+        User user = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(userService.convertToUserSummaryResponse(user));
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Logowanie uzytkownika")
+    public ResponseEntity<TokenResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+        Authentication auth = authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getEmail(), 
+                request.getPassword()
+            )
+        );
+        
+        String accessToken = jwtProvider
+            .generateAccessToken(auth);
+        String refreshToken = jwtProvider
+            .generateRefreshToken(auth);
+        
+        return ResponseEntity.ok(TokenResponse.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .tokenType("Bearer")
+            .build());
+    }
+}
+\end{lstlisting}
+
+% ============================================================================
+% ROZDZIAŁ 9: PREZENTACJA PROJEKTU
+% ============================================================================
+\chapter{Prezentacja projektu}
+
+\section{Scenariusze testowe}
+
+\subsection{Scenariusz 1: Rejestracja i logowanie}
+
+\begin{enumerate}
+    \item Użytkownik otwiera aplikację
+    \item Wypełnia formularz rejestracji (imię, nazwisko, email, hasło)
+    \item System waliduje dane i tworzy konto
+    \item Użytkownik loguje się podając email i hasło
+    \item System zwraca token JWT
+    \item Użytkownik używa tokenu do autoryzacji żądań
+\end{enumerate}
+
+\subsection{Scenariusz 2: Zarządzanie projektem}
+
+\begin{enumerate}
+    \item Zalogowany użytkownik tworzy nowy projekt
+    \item Dodaje opis, daty rozpoczęcia i zakończenia
+    \item Przypisuje innych użytkowników do projektu
+    \item Tworzy zadania w ramach projektu
+    \item Przypisuje zadania do członków zespołu
+    \item Śledzi postęp przez zmianę statusów
+\end{enumerate}
+
+\subsection{Scenariusz 3: Współpraca zespołowa}
+
+\begin{enumerate}
+    \item Członek zespołu otrzymuje powiadomienie o przypisaniu
+    \item Przegląda szczegóły zadania
+    \item Dodaje komentarz z pytaniem
+    \item Przesyła plik z wynikami pracy
+    \item Zmienia status zadania na "W trakcie"
+    \item Po zakończeniu zmienia status na "Gotowe"
+\end{enumerate}
+
+\section{Demonstracja funkcjonalności}
+
+\subsection{Ekran logowania}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{
+\centering
+\vspace{2cm}
+\textbf{[Miejsce na zrzut ekranu]}\\
+Formularz logowania z polami email i hasło
+\vspace{2cm}
+}}
+\caption{Ekran logowania (Swagger UI)}
+\end{figure}
+
+\subsection{Lista projektów}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{
+\centering
+\vspace{2cm}
+\textbf{[Miejsce na zrzut ekranu]}\\
+Lista projektów z statusami i członkami zespołu
+\vspace{2cm}
+}}
+\caption{Lista projektów}
+\end{figure}
+
+\section{Wykorzystane narzędzia}
+
+\begin{table}[H]
+\centering
+\caption{Narzędzia wykorzystane w projekcie}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Kategoria} & \textbf{Narzędzie} \\
+\hline
+IDE & IntelliJ IDEA / VS Code \\
+Kontrola wersji & Git, GitHub \\
+Baza danych & PostgreSQL, pgAdmin \\
+Testowanie API & Postman, Swagger UI \\
+Konteneryzacja & Docker, Docker Compose \\
+Build & Gradle \\
+CI/CD & GitHub Actions \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Podsumowanie}
+
+Projekt systemu zarządzania projektami został zrealizowany zgodnie z założeniami, implementując:
+
+\begin{itemize}
+    \item Znormalizowany schemat bazy danych (3NF)
+    \item Pełne więzy integralności i walidację danych
+    \item Automatyczne tworzenie tabel przy pierwszym uruchomieniu
+    \item System audytu z rejestracją czasu operacji
+    \item Kompleksowe API REST z dokumentacją OpenAPI
+    \item Bezpieczną autentykację opartą na JWT
+    \item Powiadomienia i komunikację w czasie rzeczywistym
+\end{itemize}
+
+System jest gotowy do wdrożenia produkcyjnego i dalszego rozwoju.
+
+% ============================================================================
+% DODATKI
+% ============================================================================
+\appendix
+
+\chapter{Pełny schemat SQL}
+
+Pełny schemat bazy danych znajduje się w pliku:\\
+\texttt{docs/database-schema.sql}
+
+\chapter{Diagram przypadków użycia PlantUML}
+
+Źródło diagramu w formacie PlantUML:\\
+\texttt{docs/use-case-diagram.puml}
+
+% ============================================================================
+% BIBLIOGRAFIA
+% ============================================================================
+\begin{thebibliography}{9}
+
+\bibitem{spring}
+Spring Framework Documentation,
+\url{https://docs.spring.io/spring-framework/docs/current/reference/html/}
+
+\bibitem{hibernate}
+Hibernate ORM Documentation,
+\url{https://hibernate.org/orm/documentation/}
+
+\bibitem{postgresql}
+PostgreSQL Documentation,
+\url{https://www.postgresql.org/docs/}
+
+\bibitem{jwt}
+JSON Web Tokens,
+\url{https://jwt.io/introduction}
+
+\bibitem{openapi}
+OpenAPI Specification,
+\url{https://swagger.io/specification/}
+
+\end{thebibliography}
+
+\end{document}

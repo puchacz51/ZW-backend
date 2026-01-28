@@ -2,10 +2,17 @@ package pl.pbs.zwbackend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import pl.pbs.zwbackend.model.enums.ProjectRole;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "project_user")
+@Table(name = "project_user", indexes = {
+    @Index(name = "idx_project_user_project", columnList = "project_id"),
+    @Index(name = "idx_project_user_user", columnList = "user_id"),
+    @Index(name = "idx_project_user_role", columnList = "role")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,4 +34,8 @@ public class ProjectUser {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private ProjectRole role;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime assignedAt;
 }

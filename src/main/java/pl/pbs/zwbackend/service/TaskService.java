@@ -12,6 +12,7 @@ import pl.pbs.zwbackend.exception.UnauthorizedOperationException;
 import pl.pbs.zwbackend.model.Project;
 import pl.pbs.zwbackend.model.Task;
 import pl.pbs.zwbackend.model.User;
+import pl.pbs.zwbackend.model.enums.TaskStatus;
 import pl.pbs.zwbackend.repository.ProjectRepository;
 import pl.pbs.zwbackend.repository.TaskRepository;
 import pl.pbs.zwbackend.repository.UserRepository;
@@ -27,6 +28,8 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final AuditLogService auditLogService;
+    private final NotificationService notificationService;
 
     @Transactional
     public TaskResponse createTask(TaskCreateRequest taskRequest, String userEmail) {
@@ -52,6 +55,20 @@ public class TaskService {
                 .build();
 
         Task savedTask = taskRepository.save(task);
+        
+        // Logowanie audytu
+        auditLogService.logActionAsync(userEmail, AuditLogService.ACTION_CREATE, 
+                AuditLogService.ENTITY_TASK, savedTask.getId());
+        
+        // Powiadomienie dla przypisanej osoby
+        if (assignedUser != null && !assignedUser.getId().equals(currentUser.getId())) {
+            notificationService.notifyTaskAssignment(
+                    assignedUser.getId(), 
+                    savedTask.getName(), 
+                    project.getName()
+            );
+        }
+        
         return convertToResponse(savedTask);
     }
 
@@ -104,6 +121,10 @@ public class TaskService {
             throw new UnauthorizedOperationException("User not authorized to update this task");
         }
 
+        // Zapisz poprzedni status i przypisaną osobę
+        TaskStatus previousStatus = task.getStatus();
+        User previousAssignedUser = task.getAssignedTo();
+
         User assignedUser = null;
         if (taskRequest.getAssignedTo() != null && !taskRequest.getAssignedTo().isEmpty()) {
             assignedUser = userRepository.findByEmail(taskRequest.getAssignedTo())
@@ -117,6 +138,31 @@ public class TaskService {
         task.setAssignedTo(assignedUser);
 
         Task updatedTask = taskRepository.save(task);
+        
+        // Logowanie audytu
+        auditLogService.logActionAsync(userEmail, AuditLogService.ACTION_UPDATE, 
+                AuditLogService.ENTITY_TASK, taskId);
+        
+        // Powiadomienie o zmianie statusu
+        if (previousStatus != taskRequest.getStatus() && task.getAssignedTo() != null 
+                && !task.getAssignedTo().getId().equals(currentUser.getId())) {
+            notificationService.notifyTaskStatusChange(
+                    task.getAssignedTo().getId(),
+                    task.getName(),
+                    taskRequest.getStatus().name()
+            );
+        }
+        
+        // Powiadomienie o nowym przypisaniu
+        if (assignedUser != null && (previousAssignedUser == null || !previousAssignedUser.getId().equals(assignedUser.getId()))
+                && !assignedUser.getId().equals(currentUser.getId())) {
+            notificationService.notifyTaskAssignment(
+                    assignedUser.getId(),
+                    task.getName(),
+                    task.getProject().getName()
+            );
+        }
+        
         return convertToResponse(updatedTask);
     }
 
@@ -132,6 +178,10 @@ public class TaskService {
         if (!task.getProject().getCreatedBy().getId().equals(currentUser.getId())) {
             throw new UnauthorizedOperationException("User not authorized to delete this task");
         }
+
+        // Logowanie audytu przed usunięciem
+        auditLogService.logAction(userEmail, AuditLogService.ACTION_DELETE, 
+                AuditLogService.ENTITY_TASK, taskId);
 
         taskRepository.delete(task);
     }

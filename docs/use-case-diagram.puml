@@ -1,0 +1,170 @@
+@startuml use-case-diagram
+!theme plain
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+title Diagram Przypadków Użycia - System Zarządzania Projektami
+
+left to right direction
+
+' Aktorzy
+actor "Użytkownik\nNiezalogowany" as Guest
+actor "Użytkownik\nZalogowany" as User
+actor "Administrator" as Admin
+
+User -|> Guest
+Admin -|> User
+
+' System
+rectangle "System Zarządzania Projektami" {
+    
+    ' ==== Moduł Autentykacji ====
+    package "Moduł Autentykacji" {
+        usecase "UC01: Rejestracja\nkonta" as UC01
+        usecase "UC02: Logowanie\ndo systemu" as UC02
+        usecase "UC03: Wylogowanie\nz systemu" as UC03
+        usecase "UC04: Resetowanie\nhasła" as UC04
+        usecase "UC05: Odświeżenie\ntokenu JWT" as UC05
+    }
+    
+    ' ==== Moduł Projektów ====
+    package "Moduł Projektów" {
+        usecase "UC10: Tworzenie\nprojektu" as UC10
+        usecase "UC11: Przeglądanie\nlisty projektów" as UC11
+        usecase "UC12: Wyświetlanie\nszczegółów projektu" as UC12
+        usecase "UC13: Edycja\nprojektu" as UC13
+        usecase "UC14: Usuwanie\nprojektu" as UC14
+        usecase "UC15: Przypisywanie\nużytkowników" as UC15
+        usecase "UC16: Zmiana roli\nużytkownika w projekcie" as UC16
+        usecase "UC17: Usuwanie\nużytkownika z projektu" as UC17
+    }
+    
+    ' ==== Moduł Zadań ====
+    package "Moduł Zadań" {
+        usecase "UC20: Tworzenie\nzadania" as UC20
+        usecase "UC21: Przeglądanie\nzadań projektu" as UC21
+        usecase "UC22: Edycja\nzadania" as UC22
+        usecase "UC23: Usuwanie\nzadania" as UC23
+        usecase "UC24: Zmiana statusu\nzadania" as UC24
+        usecase "UC25: Przypisanie\nzadania użytkownikowi" as UC25
+        usecase "UC26: Przeglądanie\nmoich zadań" as UC26
+    }
+    
+    ' ==== Moduł Komentarzy ====
+    package "Moduł Komentarzy" {
+        usecase "UC30: Dodanie komentarza\ndo projektu" as UC30
+        usecase "UC31: Edycja\nkomentarza" as UC31
+        usecase "UC32: Usunięcie\nkomentarza" as UC32
+        usecase "UC33: Dodanie komentarza\ndo zadania" as UC33
+    }
+    
+    ' ==== Moduł Plików ====
+    package "Moduł Plików" {
+        usecase "UC40: Przesyłanie\npliku do projektu" as UC40
+        usecase "UC41: Pobieranie\npliku" as UC41
+        usecase "UC42: Usuwanie\npliku" as UC42
+        usecase "UC43: Przeglądanie\nlisty plików" as UC43
+    }
+    
+    ' ==== Moduł Użytkowników ====
+    package "Moduł Użytkowników" {
+        usecase "UC50: Przeglądanie\nprofilu" as UC50
+        usecase "UC51: Przesyłanie\navatara" as UC51
+        usecase "UC52: Usuwanie\navatara" as UC52
+        usecase "UC53: Lista\nwszystkich użytkowników" as UC53
+    }
+    
+    ' ==== Moduł Powiadomień ====
+    package "Moduł Powiadomień" {
+        usecase "UC60: Przeglądanie\npowiadomień" as UC60
+        usecase "UC61: Oznaczanie jako\nprzeczytane" as UC61
+        usecase "UC62: Usuwanie\npowiadomień" as UC62
+    }
+    
+    ' ==== Moduł Czatu ====
+    package "Moduł Czatu" {
+        usecase "UC70: Wysyłanie\nwiadomości" as UC70
+        usecase "UC71: Odbieranie\nwiadomości (WebSocket)" as UC71
+        usecase "UC72: Przeglądanie\nhistorii czatu" as UC72
+    }
+    
+    ' ==== Moduł Audytu (Admin) ====
+    package "Moduł Audytu" {
+        usecase "UC80: Przeglądanie\nlogów audytu" as UC80
+        usecase "UC81: Filtrowanie\nlogów" as UC81
+        usecase "UC82: Statystyki\naktywności" as UC82
+    }
+}
+
+' ==== Relacje Guest ====
+Guest --> UC01
+Guest --> UC02
+Guest --> UC04
+
+' ==== Relacje User ====
+User --> UC03
+User --> UC05
+
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+User --> UC17
+
+User --> UC20
+User --> UC21
+User --> UC22
+User --> UC23
+User --> UC24
+User --> UC25
+User --> UC26
+
+User --> UC30
+User --> UC31
+User --> UC32
+User --> UC33
+
+User --> UC40
+User --> UC41
+User --> UC42
+User --> UC43
+
+User --> UC50
+User --> UC51
+User --> UC52
+User --> UC53
+
+User --> UC60
+User --> UC61
+User --> UC62
+
+User --> UC70
+User --> UC71
+User --> UC72
+
+' ==== Relacje Admin ====
+Admin --> UC80
+Admin --> UC81
+Admin --> UC82
+
+' ==== Zależności (include/extend) ====
+UC13 ..> UC12 : <<include>>
+UC14 ..> UC12 : <<include>>
+UC15 ..> UC12 : <<include>>
+
+UC22 ..> UC21 : <<include>>
+UC23 ..> UC21 : <<include>>
+UC24 ..> UC22 : <<extend>>
+
+UC31 ..> UC30 : <<extend>>
+UC32 ..> UC30 : <<extend>>
+
+UC42 ..> UC43 : <<include>>
+
+UC61 ..> UC60 : <<include>>
+UC62 ..> UC60 : <<extend>>
+
+@enduml
